@@ -2,6 +2,10 @@
 
 ## [1.0.1] - 08-08-2025
 
+### Added
+
+* Preview gallery image added to showcase syntax highlighting capabilities
+
 ### Changed
 
 * This extension is a fork of the original "jameswoodio cisco IOS Syntax" extension.
