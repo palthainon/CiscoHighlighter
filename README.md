@@ -14,6 +14,10 @@ This extension provides comprehensive syntax highlighting for Cisco IOS, IOS-XE,
 
 Perfect for network engineers, DevOps professionals, and anyone working with Cisco network device configurations in VS Code.
 
+## Preview
+
+![Cisco IOS Syntax Highlighting](images/highlight-preview.png)
+
 ## Quick Start
 
 * Install the [extension](https://marketplace.visualstudio.com/items?itemName=dericklawson.cisco-ios-highlighter) with VSCode.
