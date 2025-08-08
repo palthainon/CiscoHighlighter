@@ -11,7 +11,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://lighthouseglobal.com"
+		"url": "git+https://github.com/palthainon/CiscoHighlighter"
 	},
 	"categories": [
 		"Programming Languages"
@@ -37,17 +37,5 @@
 				"path": "./syntaxes/cisco.tmLanguage"
 			}
 		]
-	},
-	"__metadata": {
-		"id": "2e1270cf-a11d-45c5-b8b6-5210b9c782d2",
-		"publisherId": "77832524-ec5d-4c56-9475-caebcba074ff",
-		"publisherDisplayName": "DerickL",
-		"targetPlatform": "undefined",
-		"updated": false,
-		"isPreReleaseVersion": false,
-		"hasPreReleaseVersion": false,
-		"installedTimestamp": 1708026914129,
-		"pinned": false,
-		"size": 121664
 	}
 }
