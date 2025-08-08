@@ -3,13 +3,30 @@ route-map TEST-MAP permit 10
  match ip address ACL-1
  set local-preference 100
 route-map TEST-MAP deny 20
-!
-route-map TEST-MAP deny 20
+ match all
+route-map TEST-MAP deny 30
  match community 100:200
 !
-access-list 10 permit 192.168.1.0 0.0.0.255
+ip access-list extended 2
+ 10 permit 172.22.1.1
+ 20 permit 10.1.1.1
+ 20 permit 12.1.1.1
+
+
 access-list 10 deny any
 !
 class-map match-all CRITICAL-TRAFFIC
  match ip precedence 5
 !
+
+ip prefix-list FILTER seq 10 permit 192.168.1.0/24
+ip prefix-list FILTER seq 20 deny 0.0.0.0/0 le 32
+ip prefix-list FILTER seq 30 permit 192.168.2.0/24
+ip prefix-list FILTER seq 30 permit 192.168.3.0/24
+
+
+! asa access-lists
+access-list IN-OUT line 1 extended permit ip any object obj-website time-range BREAK_TIME
+access-list IN-OUT line 2 extended permit ip any host 10.0.20.20 time-range BREAK_TIME 
+access-list IN-OUT line 3 extended permit ip any object obj-website time-range BREAK_TIME 
+access-list IN-OUT line 1 extended permit ip any host 10.0.30.20 time-range BREAK_TIME

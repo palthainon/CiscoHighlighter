@@ -1,6 +1,8 @@
 # Changelog
+## [1.0.3] - 08-08-2025
+* added tool tip functions for duplicate access lists and route-map sequence numbers
 
-## [1.0.1] - 08-08-2025
+## [1.0.2] - 08-08-2025
 
 ### Added
 
