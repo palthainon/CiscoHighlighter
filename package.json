@@ -2,7 +2,7 @@
 	"name": "CiscoHighlighter",
 	"displayName": "Cisco IOS Highlighter",
 	"description": "Cisco IOS Highlighter by Derick Lawson",
-	"version": "1.0.2",
+	"version": "1.0.3",
 	"publisher": "DerickL",
 	"icon": "images/logo.png",
 	"galleryBanner": {
@@ -17,12 +17,26 @@
 	"engines": {
 		"vscode": "^1.5.0"
 	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.5.0",
+		"@types/node": "^18.x",
+		"typescript": "^5.0.0"
+	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/palthainon/CiscoHighlighter"
 	},
 	"categories": [
 		"Programming Languages"
+	],
+	"main": "./out/extension.js",
+	"activationEvents": [
+		"onLanguage:cisco"
 	],
 	"contributes": {
 		"languages": [

@@ -3,11 +3,16 @@ route-map TEST-MAP permit 10
  match ip address ACL-1
  set local-preference 100
 route-map TEST-MAP deny 20
-!
+ match all
 route-map TEST-MAP deny 20
  match community 100:200
 !
-access-list 10 permit 192.168.1.0 0.0.0.255
+ip access-list standard 2
+ 10 permit 172.22.1.1
+ 20 permit 10.1.1.1
+ 20 permit 12.1.1.1
+
+
 access-list 10 deny any
 !
 class-map match-all CRITICAL-TRAFFIC
