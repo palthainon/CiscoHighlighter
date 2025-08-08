@@ -61,6 +61,36 @@ class CiscoHoverProvider implements vscode.HoverProvider {
             }
         }
 
+        // Check for prefix-list duplicates
+        const prefixListMatch = lineText.match(/^ip\s+prefix-list\s+(\S+)\s+seq\s+(\d+)/);
+        if (prefixListMatch) {
+            const [, listName, sequenceNum] = prefixListMatch;
+            const duplicates = this.findPrefixListDuplicates(document, listName, sequenceNum, position.line);
+            
+            if (duplicates.length > 0) {
+                const lines = duplicates.map(lineNum => `Line ${lineNum + 1}`).join(', ');
+                return new vscode.Hover(
+                    `⚠️ **Duplicate prefix-list sequence detected**\n\nPrefix-list "${listName}" sequence ${sequenceNum} is also defined on: ${lines}`,
+                    new vscode.Range(position.line, 0, position.line, lineText.length)
+                );
+            }
+        }
+
+        // Check for ASA access-list duplicates
+        const asaAclMatch = lineText.match(/^access-list\s+(\S+)\s+line\s+(\d+)/);
+        if (asaAclMatch) {
+            const [, listName, lineNum] = asaAclMatch;
+            const duplicates = this.findAsaAccessListDuplicates(document, listName, lineNum, position.line);
+            
+            if (duplicates.length > 0) {
+                const lines = duplicates.map(lineNum => `Line ${lineNum + 1}`).join(', ');
+                return new vscode.Hover(
+                    `⚠️ **Duplicate ASA access-list line detected**\n\nAccess-list "${listName}" line ${lineNum} is also defined on: ${lines}`,
+                    new vscode.Range(position.line, 0, position.line, lineText.length)
+                );
+            }
+        }
+
         // Check for access-list duplicates
         const aclMatch = lineText.match(/^\s*(\d+)\s+(permit|deny)/);
         if (aclMatch) {
@@ -162,6 +192,48 @@ class CiscoHoverProvider implements vscode.HoverProvider {
         return duplicates;
     }
 
+    private findPrefixListDuplicates(
+        document: vscode.TextDocument,
+        listName: string,
+        sequenceNum: string,
+        currentLine: number
+    ): number[] {
+        const duplicates: number[] = [];
+        const regex = new RegExp(`^ip\\s+prefix-list\\s+${this.escapeRegex(listName)}\\s+seq\\s+${sequenceNum}\\b`);
+        
+        for (let i = 0; i < document.lineCount; i++) {
+            if (i === currentLine) continue;
+            
+            const line = document.lineAt(i);
+            if (regex.test(line.text)) {
+                duplicates.push(i);
+            }
+        }
+        
+        return duplicates;
+    }
+
+    private findAsaAccessListDuplicates(
+        document: vscode.TextDocument,
+        listName: string,
+        lineNum: string,
+        currentLine: number
+    ): number[] {
+        const duplicates: number[] = [];
+        const regex = new RegExp(`^access-list\\s+${this.escapeRegex(listName)}\\s+line\\s+${lineNum}\\b`);
+        
+        for (let i = 0; i < document.lineCount; i++) {
+            if (i === currentLine) continue;
+            
+            const line = document.lineAt(i);
+            if (regex.test(line.text)) {
+                duplicates.push(i);
+            }
+        }
+        
+        return duplicates;
+    }
+
     private escapeRegex(str: string): string {
         return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     }
@@ -253,6 +325,76 @@ class CiscoDiagnosticProvider {
                     const diagnostic = new vscode.Diagnostic(
                         new vscode.Range(lineNum, 0, lineNum, line.text.length),
                         `Duplicate access-list sequence: ${aclName} sequence ${sequenceNum} (also on lines ${lines.filter(l => l !== lineNum).map(l => l + 1).join(', ')})`,
+                        vscode.DiagnosticSeverity.Warning
+                    );
+                    diagnostic.source = 'cisco-highlighter';
+                    diagnostics.push(diagnostic);
+                });
+            }
+        });
+
+        // Find prefix-list duplicates
+        const prefixListSequences = new Map<string, number[]>();
+        
+        for (let i = 0; i < document.lineCount; i++) {
+            const line = document.lineAt(i);
+            const prefixListMatch = line.text.match(/^ip\s+prefix-list\s+(\S+)\s+seq\s+(\d+)/);
+            
+            if (prefixListMatch) {
+                const [, listName, sequenceNum] = prefixListMatch;
+                const key = `${listName}-${sequenceNum}`;
+                
+                if (!prefixListSequences.has(key)) {
+                    prefixListSequences.set(key, []);
+                }
+                prefixListSequences.get(key)!.push(i);
+            }
+        }
+
+        // Add diagnostics for prefix-list duplicates
+        prefixListSequences.forEach((lines, key) => {
+            if (lines.length > 1) {
+                const [listName, sequenceNum] = key.split('-');
+                lines.forEach(lineNum => {
+                    const line = document.lineAt(lineNum);
+                    const diagnostic = new vscode.Diagnostic(
+                        new vscode.Range(lineNum, 0, lineNum, line.text.length),
+                        `Duplicate prefix-list sequence: ${listName} sequence ${sequenceNum} (also on lines ${lines.filter(l => l !== lineNum).map(l => l + 1).join(', ')})`,
+                        vscode.DiagnosticSeverity.Warning
+                    );
+                    diagnostic.source = 'cisco-highlighter';
+                    diagnostics.push(diagnostic);
+                });
+            }
+        });
+
+        // Find ASA access-list duplicates
+        const asaAccessListLines = new Map<string, number[]>();
+        
+        for (let i = 0; i < document.lineCount; i++) {
+            const line = document.lineAt(i);
+            const asaAclMatch = line.text.match(/^access-list\s+(\S+)\s+line\s+(\d+)/);
+            
+            if (asaAclMatch) {
+                const [, listName, lineNum] = asaAclMatch;
+                const key = `${listName}-${lineNum}`;
+                
+                if (!asaAccessListLines.has(key)) {
+                    asaAccessListLines.set(key, []);
+                }
+                asaAccessListLines.get(key)!.push(i);
+            }
+        }
+
+        // Add diagnostics for ASA access-list duplicates
+        asaAccessListLines.forEach((lines, key) => {
+            if (lines.length > 1) {
+                const [listName, lineNum] = key.split('-');
+                lines.forEach(lineNumber => {
+                    const line = document.lineAt(lineNumber);
+                    const diagnostic = new vscode.Diagnostic(
+                        new vscode.Range(lineNumber, 0, lineNumber, line.text.length),
+                        `Duplicate ASA access-list line: ${listName} line ${lineNum} (also on lines ${lines.filter(l => l !== lineNumber).map(l => l + 1).join(', ')})`,
                         vscode.DiagnosticSeverity.Warning
                     );
                     diagnostic.source = 'cisco-highlighter';
