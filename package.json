@@ -47,7 +47,8 @@
 					"cisco"
 				],
 				"extensions": [
-					".ios"
+					".ios",
+					".cisco"
 				],
 				"configuration": "./language-configuration.json"
 			}

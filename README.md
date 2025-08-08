@@ -8,7 +8,7 @@ This extension provides comprehensive syntax highlighting for Cisco IOS, IOS-XE,
 
 - **Color-coded syntax highlighting** for Cisco commands, keywords, and parameters
 - **Improved readability** of configuration files with proper formatting
-- **Support for multiple file types** including `.ios`, `.cfg`, and `.conf` extensions
+- **Support for multiple file types** including `.ios` and `.cisco` extensions
 - **Enhanced development experience** when working with network device configurations
 - **Better error detection** through visual highlighting of malformed commands
 - **Duplicate sequence detection** with hover tooltips for route-maps and access-lists
@@ -23,7 +23,7 @@ Perfect for network engineers, DevOps professionals, and anyone working with Cis
 
 * Install the [extension](https://marketplace.visualstudio.com/items?itemName=dericklawson.cisco-ios-highlighter) with VSCode.
 
-* Save a file with the `.ios` extension and open with VSCode
+* Save a file with the `.ios` or `.cisco` extension and open with VSCode
 
 ## New Features
 
@@ -55,7 +55,7 @@ ip access-list standard 2
 ```
 
 **How it works:**
-1. **Automatic Detection**: Duplicates are detected automatically when you open or edit `.ios` files
+1. **Automatic Detection**: Duplicates are detected automatically when you open or edit `.ios` or `.cisco` files
 2. **Visual Feedback**: Duplicate lines get red squiggly underlines immediately
 3. **Problems Panel**: All duplicates are listed in VS Code's Problems panel
 4. **Detailed Tooltips**: Hover over any duplicate line for specific information about where other duplicates are located
