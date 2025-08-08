@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Language="en-US" Id="cisco" Version="1.9.1" Publisher="jamiewoodio"/>
-    <DisplayName>Cisco IOS Syntax</DisplayName>
-    <Description xml:space="preserve">Cisco IOS Syntax Highlighter</Description>
+    <Identity Language="en-US" Id="cisco" Version="1.9.1" Publisher="DerickL"/>
+    <DisplayName>Cisco IOS Highlighter</DisplayName>
+    <Description xml:space="preserve">Cisco IOS Highlighter</Description>
     <Tags>cisco,Cisco,__ext_ios</Tags>
     <Categories>Programming Languages</Categories>
     <GalleryFlags>Public</GalleryFlags>
@@ -15,10 +15,10 @@
       <Property Id="Microsoft.VisualStudio.Code.ExtensionKind" Value="ui,workspace,web" />
       <Property Id="Microsoft.VisualStudio.Code.LocalizedLanguages" Value="" />
       
-        <Property Id="Microsoft.VisualStudio.Services.Links.Source" Value="git+https://github.com/woodjamie/vscode-cisco-syntax.git" />
-        <Property Id="Microsoft.VisualStudio.Services.Links.Getstarted" Value="git+https://github.com/woodjamie/vscode-cisco-syntax.git" />
+        <Property Id="Microsoft.VisualStudio.Services.Links.Source" Value="git+https://github.com/palthainon/CiscoHighlighter.git" />
+        <Property Id="Microsoft.VisualStudio.Services.Links.Getstarted" Value="git+https://github.com/palthainon/CiscoHighlighter.git" />
         
-          <Property Id="Microsoft.VisualStudio.Services.Links.Repository" Value="git+https://github.com/woodjamie/vscode-cisco-syntax.git" />
+          <Property Id="Microsoft.VisualStudio.Services.Links.Repository" Value="git+https://github.com/palthainon/CiscoHighlighter.git" />
         
       
       

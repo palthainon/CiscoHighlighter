@@ -1,6 +1,6 @@
 # vscode-cisco-syntax
 
-Cisco IOS Syntax Highlighting for [Visual Studio Code](https://code.visualstudio.com/)
+Cisco IOS Highlighting for [Visual Studio Code](https://code.visualstudio.com/)
 
 ## What This Extension Does
 
@@ -16,7 +16,7 @@ Perfect for network engineers, DevOps professionals, and anyone working with Cis
 
 ## Quick Start
 
-* Install the [extension](https://marketplace.visualstudio.com/items?itemName=jamiewoodio.cisco) with VSCode.
+* Install the [extension](https://marketplace.visualstudio.com/items?itemName=dericklawson.cisco-ios-highlighter) with VSCode.
 
 * Save a file with the `.ios` extension and open with VSCode
 
@@ -24,5 +24,4 @@ Perfect for network engineers, DevOps professionals, and anyone working with Cis
 
 [GitHub](https://github.com/woodjme/vscode-cisco-syntax)
 
-[Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=jamiewoodio.cisco)
-	
+[Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=dericklawson.cisco-ios-highlighter)

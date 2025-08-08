@@ -1,11 +1,11 @@
 {
 	"name": "cisco",
-	"displayName": "Cisco IOS Syntax-Dericks",
-	"description": "Cisco IOS Syntax Highlighter by Derick",
+	"displayName": "Cisco IOS Highlighter",
+	"description": "Cisco IOS Highlighter by Derick Lawson",
 	"version": "1.9.3",
 	"publisher": "DerickL",
 	"icon": "images/logo.png",
-	"license": "MIT",
+	"license": "Apache-2.0",
 	"engines": {
 		"vscode": "^1.5.0"
 	},
