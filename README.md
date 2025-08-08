@@ -29,10 +29,15 @@ Perfect for network engineers, DevOps professionals, and anyone working with Cis
 
 ### Duplicate Sequence Detection
 
-The extension now provides intelligent hover tooltips to detect duplicate sequence numbers in:
+The extension now provides comprehensive duplicate sequence detection with both visual indicators and hover tooltips:
 
+**Visual Indicators:**
+- **Red squiggly underlines** automatically appear on duplicate sequence lines
+- **Warning indicators** in the Problems panel showing all duplicates in the file
+
+**Hover Tooltips:**
 - **Route-maps**: Hover over any route-map line to see if the same sequence number is used elsewhere
-- **Access-lists**: Hover over access-list entries to detect duplicate sequence numbers within the same ACL
+- **Access-lists**: Hover over access-list entries to detect duplicate sequence numbers within the same ACL (works with both indented and non-indented entries)
 
 Example duplicate scenarios detected:
 ```cisco
@@ -49,7 +54,13 @@ ip access-list standard 2
  20 permit 12.1.1.1          ← Duplicate sequence 20 detected
 ```
 
-When you hover over a duplicate line, you'll see a warning tooltip indicating the duplicate and showing which other lines contain the same sequence number.
+**How it works:**
+1. **Automatic Detection**: Duplicates are detected automatically when you open or edit `.ios` files
+2. **Visual Feedback**: Duplicate lines get red squiggly underlines immediately
+3. **Problems Panel**: All duplicates are listed in VS Code's Problems panel
+4. **Detailed Tooltips**: Hover over any duplicate line for specific information about where other duplicates are located
+
+Both route-map and access-list duplicates are supported, with smart context detection that handles various Cisco IOS syntax patterns.
 
 ## Links
 
