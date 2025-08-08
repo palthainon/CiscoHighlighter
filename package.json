@@ -2,7 +2,7 @@
 	"name": "cisco",
 	"displayName": "Cisco IOS Highlighter",
 	"description": "Cisco IOS Highlighter by Derick Lawson",
-	"version": "1.0",
+	"version": "1.0.0",
 	"publisher": "DerickL",
 	"icon": "images/logo.png",
 	"license": "Apache-2.0",
