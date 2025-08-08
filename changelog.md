@@ -1,12 +1,12 @@
 # Changelog
 
-## [1.9.3] - 08-08-2025
+## [1.0.1] - 08-08-2025
 
 ### Changed
 
-* Updated "permit" keyword highlighting to use green color scheme (constant.numeric.cisco) matching IP address coloring for better visual consistency
+* This extension is a fork of the original "jameswoodio cisco IOS Syntax" extension.
 
-## [1.9.2] - 08-08-2025
+## [1.0] - 08-08-2025
 
 ### Added
 
@@ -20,19 +20,4 @@
 * Enhanced IPv4 and IPv6 address pattern matching
 * Track object highlighting for high availability configurations
 * IP SLA monitoring command highlighting
-
-### Changed
-
-* Updated "deny" keyword highlighting to use red color scheme (invalid.illegal.cisco) for better visibility
-* Improved README.md with comprehensive extension description and feature list
-
-### Removed
-
-None
-
-## [1.9.1] - 07-12-2021
-
-### Added
-
-Folding for interfaces, DHCP pools and SSIDs
-
+* Updated "permit" keyword highlighting to use green color scheme (constant.numeric.cisco) matching IP address coloring for better visual consistency

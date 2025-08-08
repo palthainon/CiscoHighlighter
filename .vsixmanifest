@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Language="en-US" Id="cisco" Version="1.9.1" Publisher="DerickL"/>
+    <Identity Language="en-US" Id="cisco" Version="1.0" Publisher="DerickL"/>
     <DisplayName>Cisco IOS Highlighter</DisplayName>
     <Description xml:space="preserve">Cisco IOS Highlighter</Description>
     <Tags>cisco,Cisco,__ext_ios</Tags>
