@@ -1,0 +1,53 @@
+{
+	"name": "cisco",
+	"displayName": "Cisco IOS Syntax-Dericks",
+	"description": "Cisco IOS Syntax Highlighter by Derick",
+	"version": "1.9.3",
+	"publisher": "DerickL",
+	"icon": "images/logo.png",
+	"license": "MIT",
+	"engines": {
+		"vscode": "^1.5.0"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://lighthouseglobal.com"
+	},
+	"categories": [
+		"Programming Languages"
+	],
+	"contributes": {
+		"languages": [
+			{
+				"id": "cisco",
+				"aliases": [
+					"Cisco",
+					"cisco"
+				],
+				"extensions": [
+					".ios"
+				],
+				"configuration": "./language-configuration.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "cisco",
+				"scopeName": "text.cisco",
+				"path": "./syntaxes/cisco.tmLanguage"
+			}
+		]
+	},
+	"__metadata": {
+		"id": "2e1270cf-a11d-45c5-b8b6-5210b9c782d2",
+		"publisherId": "77832524-ec5d-4c56-9475-caebcba074ff",
+		"publisherDisplayName": "DerickL",
+		"targetPlatform": "undefined",
+		"updated": false,
+		"isPreReleaseVersion": false,
+		"hasPreReleaseVersion": false,
+		"installedTimestamp": 1708026914129,
+		"pinned": false,
+		"size": 121664
+	}
+}
