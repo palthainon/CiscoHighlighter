@@ -41,15 +41,293 @@
 			"  otv extend-vlan add ${2:vlan}",
 			"$0"
 		],
-		"description": "Remove vlan from otv overlay interface"
+		"description": "Add vlan to otv overlay interface"
 	},
-	"Remove vlan from otv overlay": {
-		"prefix": "remove-vlan-from-otv",
+
+	"Interface configuration": {
+		"prefix": "int",
 		"body": [
-			"interface Overlay${1:overlay_num}",
-			"  otv extend-vlan remove ${2:vlan}",
+			"interface ${1|GigabitEthernet,FastEthernet,Ethernet,TenGigabitEthernet,Vlan|}${2:0/0}",
+			"  ${3:description ${4:interface description}}",
+			"  ${5:ip address ${6:192.168.1.1} ${7:255.255.255.0}}",
+			"  ${8:no shutdown}",
 			"$0"
 		],
-		"description": "Remove vlan from otv overlay interface"
+		"description": "Configure interface"
+	},
+
+	"Standard Access List": {
+		"prefix": "acl-std",
+		"body": [
+			"ip access-list standard ${1:ACL-NAME}",
+			"  ${2:10} ${3|permit,deny|} ${4:any}",
+			"$0"
+		],
+		"description": "Create standard access list"
+	},
+
+	"Extended Access List": {
+		"prefix": "acl-ext",
+		"body": [
+			"ip access-list extended ${1:ACL-NAME}",
+			"  ${2:10} ${3|permit,deny|} ${4|tcp,udp,icmp,ip|} ${5:any} ${6:any}",
+			"$0"
+		],
+		"description": "Create extended access list"
+	},
+
+	"Route Map": {
+		"prefix": "routemap",
+		"body": [
+			"route-map ${1:MAP-NAME} ${2|permit,deny|} ${3:10}",
+			"  ${4:match ${5|ip address,interface,ip route-source,community,as-path,metric|} ${6:value}}",
+			"  ${7:set ${8|local-preference,metric,community,as-path,ip next-hop|} ${9:value}}",
+			"$0"
+		],
+		"description": "Create route-map"
+	},
+
+	"OSPF Configuration": {
+		"prefix": "ospf",
+		"body": [
+			"router ospf ${1:1}",
+			"  router-id ${2:1.1.1.1}",
+			"  network ${3:192.168.1.0} ${4:0.0.0.255} area ${5:0}",
+			"$0"
+		],
+		"description": "Configure OSPF"
+	},
+
+	"BGP Configuration": {
+		"prefix": "bgp",
+		"body": [
+			"router bgp ${1:65001}",
+			"  bgp router-id ${2:1.1.1.1}",
+			"  neighbor ${3:192.168.1.2} remote-as ${4:65002}",
+			"  network ${5:192.168.1.0} mask ${6:255.255.255.0}",
+			"$0"
+		],
+		"description": "Configure BGP"
+	},
+
+	"EIGRP Configuration": {
+		"prefix": "eigrp",
+		"body": [
+			"router eigrp ${1:1}",
+			"  eigrp router-id ${2:1.1.1.1}",
+			"  network ${3:192.168.1.0} ${4:0.0.0.255}",
+			"  no auto-summary",
+			"$0"
+		],
+		"description": "Configure EIGRP"
+	},
+
+	"Static Route": {
+		"prefix": "static",
+		"body": [
+			"ip route ${1:0.0.0.0} ${2:0.0.0.0} ${3:192.168.1.1}",
+			"$0"
+		],
+		"description": "Configure static route"
+	},
+
+	"Switchport Access": {
+		"prefix": "sw-access",
+		"body": [
+			"interface ${1:GigabitEthernet0/1}",
+			"  switchport mode access",
+			"  switchport access vlan ${2:10}",
+			"  spanning-tree portfast",
+			"$0"
+		],
+		"description": "Configure switchport access mode"
+	},
+
+	"Switchport Trunk": {
+		"prefix": "sw-trunk",
+		"body": [
+			"interface ${1:GigabitEthernet0/1}",
+			"  switchport mode trunk",
+			"  switchport trunk allowed vlan ${2:10,20,30}",
+			"  switchport trunk native vlan ${3:1}",
+			"$0"
+		],
+		"description": "Configure switchport trunk mode"
+	},
+
+	"SVI Interface": {
+		"prefix": "svi",
+		"body": [
+			"interface vlan ${1:10}",
+			"  description ${2:VLAN description}",
+			"  ip address ${3:192.168.10.1} ${4:255.255.255.0}",
+			"  no shutdown",
+			"$0"
+		],
+		"description": "Configure SVI (Switched Virtual Interface)"
+	},
+
+	"Loopback Interface": {
+		"prefix": "loopback",
+		"body": [
+			"interface loopback ${1:0}",
+			"  description ${2:Loopback interface}",
+			"  ip address ${3:1.1.1.1} ${4:255.255.255.255}",
+			"$0"
+		],
+		"description": "Configure loopback interface"
+	},
+
+	"VRF Configuration": {
+		"prefix": "vrf",
+		"body": [
+			"ip vrf ${1:VRF-NAME}",
+			"  rd ${2:65001:1}",
+			"  route-target export ${3:65001:1}",
+			"  route-target import ${4:65001:1}",
+			"$0"
+		],
+		"description": "Configure VRF"
+	},
+
+	"HSRP Configuration": {
+		"prefix": "hsrp",
+		"body": [
+			"interface ${1:vlan10}",
+			"  standby ${2:1} ip ${3:192.168.10.1}",
+			"  standby ${2:1} priority ${4:110}",
+			"  standby ${2:1} preempt",
+			"$0"
+		],
+		"description": "Configure HSRP"
+	},
+
+	"VRRP Configuration": {
+		"prefix": "vrrp",
+		"body": [
+			"interface ${1:vlan10}",
+			"  vrrp ${2:1} ip ${3:192.168.10.1}",
+			"  vrrp ${2:1} priority ${4:110}",
+			"  vrrp ${2:1} preempt",
+			"$0"
+		],
+		"description": "Configure VRRP"
+	},
+
+	"Prefix List": {
+		"prefix": "prefix-list",
+		"body": [
+			"ip prefix-list ${1:LIST-NAME} seq ${2:10} ${3|permit,deny|} ${4:192.168.1.0/24}",
+			"$0"
+		],
+		"description": "Configure prefix list"
+	},
+
+	"Community List": {
+		"prefix": "community-list",
+		"body": [
+			"ip community-list ${1|standard,extended|} ${2:LIST-NAME} ${3|permit,deny|} ${4:65001:100}",
+			"$0"
+		],
+		"description": "Configure community list"
+	},
+
+	"AS Path List": {
+		"prefix": "as-path-list",
+		"body": [
+			"ip as-path access-list ${1:LIST-NAME} ${2|permit,deny|} ${3:_65001_}",
+			"$0"
+		],
+		"description": "Configure AS path access list"
+	},
+
+	"NTP Configuration": {
+		"prefix": "ntp",
+		"body": [
+			"ntp server ${1:pool.ntp.org}",
+			"clock timezone ${2:UTC} ${3:0}",
+			"clock summer-time ${4:DST} recurring",
+			"$0"
+		],
+		"description": "Configure NTP"
+	},
+
+	"SNMP Configuration": {
+		"prefix": "snmp",
+		"body": [
+			"snmp-server community ${1:public} ${2|RO,RW|}",
+			"snmp-server host ${3:192.168.1.100} version ${4|2c,3|} ${5:public}",
+			"snmp-server enable traps",
+			"$0"
+		],
+		"description": "Configure SNMP"
+	},
+
+	"AAA Authentication": {
+		"prefix": "aaa",
+		"body": [
+			"aaa new-model",
+			"aaa authentication login default ${1|local,group tacacs+ local,group radius local|}",
+			"aaa authorization exec default ${2|local,group tacacs+ local,group radius local|}",
+			"$0"
+		],
+		"description": "Configure AAA authentication"
+	},
+
+	"Banner Configuration": {
+		"prefix": "banner",
+		"body": [
+			"banner ${1|motd,login,exec|} #",
+			"${2:Authorized access only}",
+			"#",
+			"$0"
+		],
+		"description": "Configure banner"
+	},
+
+	"SSH Configuration": {
+		"prefix": "ssh",
+		"body": [
+			"ip domain-name ${1:example.com}",
+			"crypto key generate rsa general-keys modulus ${2:2048}",
+			"ip ssh version 2",
+			"line vty 0 15",
+			"  transport input ssh",
+			"$0"
+		],
+		"description": "Configure SSH access"
+	},
+
+	"Line Console": {
+		"prefix": "line-con",
+		"body": [
+			"line console 0",
+			"  logging synchronous",
+			"  exec-timeout ${1:5} ${2:0}",
+			"$0"
+		],
+		"description": "Configure console line"
+	},
+
+	"Line VTY": {
+		"prefix": "line-vty",
+		"body": [
+			"line vty ${1:0} ${2:15}",
+			"  logging synchronous",
+			"  exec-timeout ${3:10} ${4:0}",
+			"  transport input ${5|ssh,telnet,all|}",
+			"$0"
+		],
+		"description": "Configure VTY lines"
+	},
+
+	"Spanning Tree": {
+		"prefix": "stp",
+		"body": [
+			"spanning-tree mode ${1|pvst,rapid-pvst,mst|}",
+			"spanning-tree vlan ${2:1-4094} priority ${3:4096}",
+			"$0"
+		],
+		"description": "Configure Spanning Tree"
 	}
 }
