@@ -12,21 +12,32 @@ ip access-list extended 2
  20 permit 10.1.1.1
  20 permit 12.1.1.1
 
+acces-list
 
 access-list 10 deny any
 !
 class-map match-all CRITICAL-TRAFFIC
  match ip precedence 5
+
+config t
+ switchport 
 !
 
 ip prefix-list FILTER seq 10 permit 192.168.1.0/24
 ip prefix-list FILTER seq 20 deny 0.0.0.0/0 le 32
 ip prefix-list FILTER seq 30 permit 192.168.2.0/24
 ip prefix-list FILTER seq 30 permit 192.168.3.0/24
+ip prefix-list FILTER seq 40 deny 0.0.0.0/0 le 32
 
 
 ! asa access-lists
 access-list IN-OUT line 1 extended permit ip any object obj-website time-range BREAK_TIME
+access-list IN-OUT line 20 extended permit ip any object obj-website time-range BREAK_TIME
 access-list IN-OUT line 2 extended permit ip any host 10.0.20.20 time-range BREAK_TIME 
 access-list IN-OUT line 3 extended permit ip any object obj-website time-range BREAK_TIME 
 access-list IN-OUT line 1 extended permit ip any host 10.0.30.20 time-range BREAK_TIME
+access-list IN-OUT line 4 extended permit ip any host 10.0.20.20 time-range BREAK_TIME 
+access-list IN-OUT line 5 extended permit ip any any
+
+
+

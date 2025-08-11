@@ -419,11 +419,66 @@ class CiscoDiagnosticProvider {
             const line = document.lineAt(i);
             const lineText = line.text;
             
-            // Check for ACL declaration
+            // Check for ACL declaration (IOS style)
             const aclMatch = lineText.match(/^(?:ip\s+)?access-list\s+(?:standard\s+|extended\s+)?(\S+)/);
             if (aclMatch) {
                 currentACL = aclMatch[1];
                 aclStartLine = i;
+                continue;
+            }
+            
+            // Check for ASA-style access-list entries (inline format)
+            const asaAclMatch = lineText.match(/^access-list\s+(\S+)\s+line\s+\d+\s+extended\s+(permit|deny)\s+(.+)/i);
+            if (asaAclMatch) {
+                const [, aclName, action, rule] = asaAclMatch;
+                
+                // Check for overly permissive ASA rules
+                if (action.toLowerCase() === 'permit' && rule.match(/ip\s+any\s+any/i)) {
+                    const diagnostic = new vscode.Diagnostic(
+                        new vscode.Range(i, 0, i, lineText.length),
+                        `Security Risk: Overly permissive rule 'permit ip any any' in ASA ACL '${aclName}' - consider restricting source/destination`,
+                        vscode.DiagnosticSeverity.Warning
+                    );
+                    diagnostic.source = 'cisco-highlighter';
+                    diagnostics.push(diagnostic);
+                }
+                
+                // Check for ASA deny any any above other rules
+                if (action.toLowerCase() === 'deny' && rule.match(/ip\s+any\s+any/i)) {
+                    // Check if there are more ASA ACL entries after this deny any any for same ACL
+                    let hasSubsequentRules = false;
+                    for (let j = i + 1; j < document.lineCount; j++) {
+                        const nextLine = document.lineAt(j);
+                        const nextLineText = nextLine.text;
+                        
+                        // Break if we hit a different ACL or config block
+                        if (nextLineText.match(/^(?:route-map|interface|class-map|policy-map)/)) {
+                            break;
+                        }
+                        
+                        // Check if there's a subsequent ASA ACL entry for same ACL
+                        const nextAsaMatch = nextLineText.match(/^access-list\s+(\S+)\s+line\s+\d+/);
+                        if (nextAsaMatch && nextAsaMatch[1] === aclName) {
+                            hasSubsequentRules = true;
+                            break;
+                        }
+                        
+                        // Break if we hit a different ASA ACL
+                        if (nextAsaMatch && nextAsaMatch[1] !== aclName) {
+                            break;
+                        }
+                    }
+                    
+                    if (hasSubsequentRules) {
+                        const diagnostic = new vscode.Diagnostic(
+                            new vscode.Range(i, 0, i, lineText.length),
+                            `Unreachable Code: 'deny ip any any' makes subsequent ACL rules unreachable in ASA ACL '${aclName}'`,
+                            vscode.DiagnosticSeverity.Error
+                        );
+                        diagnostic.source = 'cisco-highlighter';
+                        diagnostics.push(diagnostic);
+                    }
+                }
                 continue;
             }
             
@@ -433,9 +488,9 @@ class CiscoDiagnosticProvider {
                 continue;
             }
             
-            // Analyze ACL entries for security risks
+            // Analyze IOS-style ACL entries for security risks
             if (currentACL && lineText.trim()) {
-                // Check for overly permissive rules
+                // Check for overly permissive rules (IOS style)
                 if (lineText.match(/^\s*\d+\s+permit\s+(?:ip\s+)?any\s+any/i)) {
                     const diagnostic = new vscode.Diagnostic(
                         new vscode.Range(i, 0, i, lineText.length),
@@ -446,7 +501,7 @@ class CiscoDiagnosticProvider {
                     diagnostics.push(diagnostic);
                 }
                 
-                // Check for deny any any above other rules (unreachable code)
+                // Check for deny any any above other rules (unreachable code) - IOS style
                 if (lineText.match(/^\s*\d+\s+deny\s+(?:ip\s+)?any\s+any/i)) {
                     // Check if there are more ACL entries after this deny any any
                     let hasSubsequentRules = false;
@@ -488,7 +543,7 @@ class CiscoDiagnosticProvider {
             const line = document.lineAt(i);
             const lineText = line.text;
             
-            // Check for ACL declaration
+            // Check for IOS-style ACL declaration
             const aclMatch = lineText.match(/^(?:ip\s+)?access-list\s+(?:standard\s+|extended\s+)?(\S+)/);
             if (aclMatch) {
                 currentACL = aclMatch[1];
@@ -498,15 +553,32 @@ class CiscoDiagnosticProvider {
                 continue;
             }
             
+            // Check for ASA-style access-list entries (inline format)
+            const asaAclMatch = lineText.match(/^access-list\s+(\S+)\s+line\s+\d+\s+extended\s+(permit|deny)\s+(.+)/i);
+            if (asaAclMatch) {
+                const [, aclName, action, rule] = asaAclMatch;
+                
+                if (!aclEntries.has(aclName)) {
+                    aclEntries.set(aclName, []);
+                }
+                
+                // Normalize ASA entry for comparison (remove line number, normalize whitespace)
+                const normalizedEntry = `${action.toLowerCase()} ${rule}`.replace(/\s+/g, ' ').toLowerCase();
+                
+                const entries = aclEntries.get(aclName)!;
+                entries.push({ line: i, entry: normalizedEntry });
+                continue;
+            }
+            
             // Reset current ACL if we hit a different configuration block
             if (lineText.match(/^(?:route-map|interface|class-map|policy-map)/)) {
                 currentACL = '';
                 continue;
             }
             
-            // Collect ACL entries for redundancy analysis
+            // Collect IOS-style ACL entries for redundancy analysis
             if (currentACL && lineText.trim()) {
-                const entryMatch = lineText.match(/^\s*\d+\s+(permit|deny\s+.+)/);
+                const entryMatch = lineText.match(/^\s*\d+\s+(permit|deny(?:\s+.+)?)/);
                 if (entryMatch) {
                     // Normalize the entry for comparison (remove sequence number and extra whitespace)
                     const normalizedEntry = entryMatch[1].replace(/\s+/g, ' ').toLowerCase();
@@ -551,15 +623,16 @@ class CiscoDiagnosticProvider {
         let currentACL = '';
         let lastACLLine = -1;
         let hasExplicitDenyAll = false;
+        const asaACLs = new Map<string, { lastLine: number, hasExplicitDenyAll: boolean }>();
         
         for (let i = 0; i < document.lineCount; i++) {
             const line = document.lineAt(i);
             const lineText = line.text;
             
-            // Check for ACL declaration
+            // Check for IOS-style ACL declaration
             const aclMatch = lineText.match(/^(?:ip\s+)?access-list\s+(?:standard\s+|extended\s+)?(\S+)/);
             if (aclMatch) {
-                // Add reminder for previous ACL if needed
+                // Add reminder for previous IOS ACL if needed
                 if (currentACL && lastACLLine >= 0 && !hasExplicitDenyAll) {
                     this.addImplicitDenyReminder(document, diagnostics, currentACL, lastACLLine);
                 }
@@ -570,9 +643,28 @@ class CiscoDiagnosticProvider {
                 continue;
             }
             
+            // Check for ASA-style access-list entries (inline format)
+            const asaAclMatch = lineText.match(/^access-list\s+(\S+)\s+line\s+\d+\s+extended\s+(permit|deny)\s+(.+)/i);
+            if (asaAclMatch) {
+                const [, aclName, action, rule] = asaAclMatch;
+                
+                if (!asaACLs.has(aclName)) {
+                    asaACLs.set(aclName, { lastLine: -1, hasExplicitDenyAll: false });
+                }
+                
+                const asaACL = asaACLs.get(aclName)!;
+                asaACL.lastLine = i;
+                
+                // Check for explicit deny any any in ASA format
+                if (action.toLowerCase() === 'deny' && rule.match(/ip\s+any\s+any/i)) {
+                    asaACL.hasExplicitDenyAll = true;
+                }
+                continue;
+            }
+            
             // Check if we're leaving an ACL context
             if (lineText.match(/^(?:route-map|interface|class-map|policy-map)/)) {
-                // Add reminder for current ACL if needed
+                // Add reminder for current IOS ACL if needed
                 if (currentACL && lastACLLine >= 0 && !hasExplicitDenyAll) {
                     this.addImplicitDenyReminder(document, diagnostics, currentACL, lastACLLine);
                 }
@@ -580,7 +672,7 @@ class CiscoDiagnosticProvider {
                 continue;
             }
             
-            // Track ACL entries
+            // Track IOS-style ACL entries
             if (currentACL && lineText.trim()) {
                 const entryMatch = lineText.match(/^\s*\d+\s+(permit|deny)/);
                 if (entryMatch) {
@@ -594,10 +686,17 @@ class CiscoDiagnosticProvider {
             }
         }
         
-        // Handle the last ACL in the document
+        // Handle the last IOS ACL in the document
         if (currentACL && lastACLLine >= 0 && !hasExplicitDenyAll) {
             this.addImplicitDenyReminder(document, diagnostics, currentACL, lastACLLine);
         }
+        
+        // Handle all ASA ACLs
+        asaACLs.forEach((aclData, aclName) => {
+            if (aclData.lastLine >= 0 && !aclData.hasExplicitDenyAll) {
+                this.addImplicitDenyReminder(document, diagnostics, aclName, aclData.lastLine);
+            }
+        });
     }
 
     private addImplicitDenyReminder(document: vscode.TextDocument, diagnostics: vscode.Diagnostic[], aclName: string, lastLine: number): void {
