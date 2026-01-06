@@ -1,4 +1,26 @@
 # Changelog
+## [1.0.4] - 08-09-2025
+
+### Added
+* **Advanced ACL Analyzer**: Enhanced diagnostics for access control lists
+  - Security risk detection for overly permissive `permit any any` rules
+  - Unreachable code detection when `deny any any` appears above other rules
+  - Redundant entry detection for identical permit/deny statements within same ACL
+  - Implicit deny reminders for ACLs without explicit `deny any any` at end
+* **Enhanced Command Snippets**: Expanded from 6 to 31 code snippets including:
+  - Interface configuration (`int`)
+  - Access lists (`acl-std`, `acl-ext`)
+  - Route maps (`routemap`)
+  - Routing protocols (OSPF, BGP, EIGRP)
+  - Switching features (VLANs, STP, trunking)
+  - Security configurations (SSH, AAA, banners)
+  - Network services (NTP, SNMP)
+  - Advanced features (VRF, HSRP, VRRP)
+* **Extended File Support**: Added `.cisco` file extension alongside existing `.ios` support
+
+### Changed
+* Updated README documentation to reflect new file extension support
+
 ## [1.0.3] - 08-08-2025
 * added tool tip functions for duplicate access lists and route-map sequence numbers
 
