@@ -1,0 +1,11 @@
+.gitignore
+.vscodeignore
+.vsixmanifest
+claude.md
+futureideas.md
+tickets/**
+src/**
+out/**/*.map
+tsconfig.json
+test-highlighting.ios
+vsc-extension-quickstart.md

@@ -1,6 +1,8 @@
-# vscode-cisco-syntax
+# Cisco IOS Highlighter — Lawson Cyber LLC
 
-Cisco IOS Highlighting for [Visual Studio Code](https://code.visualstudio.com/)
+![Lawson Cyber LLC logo](images/logo.png)
+
+Lawson Cyber LLC maintains this Cisco configuration highlighter for [Visual Studio Code](https://code.visualstudio.com/).
 
 ## What This Extension Does
 
@@ -21,7 +23,7 @@ Perfect for network engineers, DevOps professionals, and anyone working with Cis
 
 ## Quick Start
 
-* Install the [extension](https://marketplace.visualstudio.com/items?itemName=dericklawson.cisco-ios-highlighter) with VSCode.
+* Install the [extension](https://marketplace.visualstudio.com/items?itemName=DerickL.CiscoHighlighter) with VSCode.
 
 * Save a file with the `.ios` or `.cisco` extension and open with VSCode
 
@@ -64,6 +66,12 @@ Both route-map and access-list duplicates are supported, with smart context dete
 
 ## Links
 
-[GitHub](https://github.com/woodjme/vscode-cisco-syntax)
+[Lawson Cyber LLC](https://lawsoncyber.com)
 
-[Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=dericklawson.cisco-ios-highlighter)
+[GitHub source](https://github.com/palthainon/CiscoHighlighter)
+
+[Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=DerickL.CiscoHighlighter)
+
+## Credits
+
+This extension is a fork of [vscode-cisco-syntax](https://github.com/woodjme/vscode-cisco-syntax).

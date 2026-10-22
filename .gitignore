@@ -1,2 +1,4 @@
 *.vsix
 futureideas.md
+
+node_modules/

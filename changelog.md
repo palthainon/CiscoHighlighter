@@ -1,4 +1,14 @@
 # Changelog
+
+## [1.0.5] - 2026-10-22
+
+### Changed
+
+- Updated the extension name and description to use Lawson Cyber LLC.
+- Replaced the extension icon with the Lawson Cyber LLC shield logo.
+- Applied the company banner color and website link.
+- Corrected the Marketplace and source links in the README.
+
 ## [1.0.4] - 08-09-2025
 
 ### Added
