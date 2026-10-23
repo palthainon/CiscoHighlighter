@@ -130,7 +130,7 @@ class CiscoHoverProvider {
     findAccessListContext(document, lineNum) {
         for (let i = lineNum; i >= 0; i--) {
             const line = document.lineAt(i);
-            const match = line.text.match(/^(?:ip\s+)?access-list\s+(?:standard\s+|extended\s+)?(\S+)/);
+            const match = line.text.match(/^ip\s+access-list\s+(?:standard|extended)\s+(\S+)\s*$/);
             if (match) {
                 return match[1];
             }
@@ -152,7 +152,7 @@ class CiscoHoverProvider {
                 continue;
             const line = document.lineAt(i);
             const lineText = line.text;
-            const aclMatch = lineText.match(/^(?:ip\s+)?access-list\s+(?:standard\s+|extended\s+)?(\S+)/);
+            const aclMatch = lineText.match(/^ip\s+access-list\s+(?:standard|extended)\s+(\S+)\s*$/);
             if (aclMatch) {
                 currentACLName = aclMatch[1];
                 inTargetACL = (currentACLName === aclName);
@@ -214,7 +214,7 @@ class CiscoDiagnosticProvider {
             const routeMapMatch = line.text.match(/^route-map\s+(\S+)\s+(permit|deny)\s+(\d+)/);
             if (routeMapMatch) {
                 const [, mapName, action, sequenceNum] = routeMapMatch;
-                const key = `${mapName}-${sequenceNum}`;
+                const key = JSON.stringify([mapName, sequenceNum]);
                 if (!routeMapSequences.has(key)) {
                     routeMapSequences.set(key, []);
                 }
@@ -224,7 +224,7 @@ class CiscoDiagnosticProvider {
         // Add diagnostics for route-map duplicates
         routeMapSequences.forEach((lines, key) => {
             if (lines.length > 1) {
-                const [mapName, sequenceNum] = key.split('-');
+                const [mapName, sequenceNum] = JSON.parse(key);
                 lines.forEach(lineNum => {
                     const line = document.lineAt(lineNum);
                     const diagnostic = new vscode.Diagnostic(new vscode.Range(lineNum, 0, lineNum, line.text.length), `Duplicate route-map sequence: ${mapName} sequence ${sequenceNum} (also on lines ${lines.filter(l => l !== lineNum).map(l => l + 1).join(', ')})`, vscode.DiagnosticSeverity.Warning);
@@ -240,7 +240,7 @@ class CiscoDiagnosticProvider {
             const line = document.lineAt(i);
             const lineText = line.text;
             // Check for ACL declaration
-            const aclMatch = lineText.match(/^(?:ip\s+)?access-list\s+(?:standard\s+|extended\s+)?(\S+)/);
+            const aclMatch = lineText.match(/^ip\s+access-list\s+(?:standard|extended)\s+(\S+)\s*$/);
             if (aclMatch) {
                 currentACL = aclMatch[1];
                 continue;
@@ -255,7 +255,7 @@ class CiscoDiagnosticProvider {
                 const seqMatch = lineText.match(/^\s*(\d+)\s+(?:permit|deny)/);
                 if (seqMatch) {
                     const sequenceNum = seqMatch[1];
-                    const key = `${currentACL}-${sequenceNum}`;
+                    const key = JSON.stringify([currentACL, sequenceNum]);
                     if (!accessListSequences.has(key)) {
                         accessListSequences.set(key, []);
                     }
@@ -266,7 +266,7 @@ class CiscoDiagnosticProvider {
         // Add diagnostics for access-list duplicates
         accessListSequences.forEach((lines, key) => {
             if (lines.length > 1) {
-                const [aclName, sequenceNum] = key.split('-');
+                const [aclName, sequenceNum] = JSON.parse(key);
                 lines.forEach(lineNum => {
                     const line = document.lineAt(lineNum);
                     const diagnostic = new vscode.Diagnostic(new vscode.Range(lineNum, 0, lineNum, line.text.length), `Duplicate access-list sequence: ${aclName} sequence ${sequenceNum} (also on lines ${lines.filter(l => l !== lineNum).map(l => l + 1).join(', ')})`, vscode.DiagnosticSeverity.Warning);
@@ -282,7 +282,7 @@ class CiscoDiagnosticProvider {
             const prefixListMatch = line.text.match(/^ip\s+prefix-list\s+(\S+)\s+seq\s+(\d+)/);
             if (prefixListMatch) {
                 const [, listName, sequenceNum] = prefixListMatch;
-                const key = `${listName}-${sequenceNum}`;
+                const key = JSON.stringify([listName, sequenceNum]);
                 if (!prefixListSequences.has(key)) {
                     prefixListSequences.set(key, []);
                 }
@@ -292,7 +292,7 @@ class CiscoDiagnosticProvider {
         // Add diagnostics for prefix-list duplicates
         prefixListSequences.forEach((lines, key) => {
             if (lines.length > 1) {
-                const [listName, sequenceNum] = key.split('-');
+                const [listName, sequenceNum] = JSON.parse(key);
                 lines.forEach(lineNum => {
                     const line = document.lineAt(lineNum);
                     const diagnostic = new vscode.Diagnostic(new vscode.Range(lineNum, 0, lineNum, line.text.length), `Duplicate prefix-list sequence: ${listName} sequence ${sequenceNum} (also on lines ${lines.filter(l => l !== lineNum).map(l => l + 1).join(', ')})`, vscode.DiagnosticSeverity.Warning);
@@ -308,7 +308,7 @@ class CiscoDiagnosticProvider {
             const asaAclMatch = line.text.match(/^access-list\s+(\S+)\s+line\s+(\d+)/);
             if (asaAclMatch) {
                 const [, listName, lineNum] = asaAclMatch;
-                const key = `${listName}-${lineNum}`;
+                const key = JSON.stringify([listName, lineNum]);
                 if (!asaAccessListLines.has(key)) {
                     asaAccessListLines.set(key, []);
                 }
@@ -318,7 +318,7 @@ class CiscoDiagnosticProvider {
         // Add diagnostics for ASA access-list duplicates
         asaAccessListLines.forEach((lines, key) => {
             if (lines.length > 1) {
-                const [listName, lineNum] = key.split('-');
+                const [listName, lineNum] = JSON.parse(key);
                 lines.forEach(lineNumber => {
                     const line = document.lineAt(lineNumber);
                     const diagnostic = new vscode.Diagnostic(new vscode.Range(lineNumber, 0, lineNumber, line.text.length), `Duplicate ASA access-list line: ${listName} line ${lineNum} (also on lines ${lines.filter(l => l !== lineNumber).map(l => l + 1).join(', ')})`, vscode.DiagnosticSeverity.Warning);
@@ -340,7 +340,7 @@ class CiscoDiagnosticProvider {
             const line = document.lineAt(i);
             const lineText = line.text;
             // Check for ACL declaration (IOS style)
-            const aclMatch = lineText.match(/^(?:ip\s+)?access-list\s+(?:standard\s+|extended\s+)?(\S+)/);
+            const aclMatch = lineText.match(/^ip\s+access-list\s+(?:standard|extended)\s+(\S+)\s*$/);
             if (aclMatch) {
                 currentACL = aclMatch[1];
                 aclStartLine = i;
@@ -432,7 +432,7 @@ class CiscoDiagnosticProvider {
             const line = document.lineAt(i);
             const lineText = line.text;
             // Check for IOS-style ACL declaration
-            const aclMatch = lineText.match(/^(?:ip\s+)?access-list\s+(?:standard\s+|extended\s+)?(\S+)/);
+            const aclMatch = lineText.match(/^ip\s+access-list\s+(?:standard|extended)\s+(\S+)\s*$/);
             if (aclMatch) {
                 currentACL = aclMatch[1];
                 if (!aclEntries.has(currentACL)) {
@@ -448,7 +448,7 @@ class CiscoDiagnosticProvider {
                     aclEntries.set(aclName, []);
                 }
                 // Normalize ASA entry for comparison (remove line number, normalize whitespace)
-                const normalizedEntry = `${action.toLowerCase()} ${rule}`.replace(/\s+/g, ' ').toLowerCase();
+                const normalizedEntry = `${action} ${rule}`.trim().replace(/\s+/g, ' ');
                 const entries = aclEntries.get(aclName);
                 entries.push({ line: i, entry: normalizedEntry });
                 continue;
@@ -460,10 +460,10 @@ class CiscoDiagnosticProvider {
             }
             // Collect IOS-style ACL entries for redundancy analysis
             if (currentACL && lineText.trim()) {
-                const entryMatch = lineText.match(/^\s*\d+\s+(permit|deny(?:\s+.+)?)/);
+                const entryMatch = lineText.match(/^\s*\d+\s+((?:permit|deny)\s+.+)/);
                 if (entryMatch) {
                     // Normalize the entry for comparison (remove sequence number and extra whitespace)
-                    const normalizedEntry = entryMatch[1].replace(/\s+/g, ' ').toLowerCase();
+                    const normalizedEntry = entryMatch[1].trim().replace(/\s+/g, ' ');
                     const entries = aclEntries.get(currentACL);
                     entries.push({ line: i, entry: normalizedEntry });
                 }
@@ -501,7 +501,7 @@ class CiscoDiagnosticProvider {
             const line = document.lineAt(i);
             const lineText = line.text;
             // Check for IOS-style ACL declaration
-            const aclMatch = lineText.match(/^(?:ip\s+)?access-list\s+(?:standard\s+|extended\s+)?(\S+)/);
+            const aclMatch = lineText.match(/^ip\s+access-list\s+(?:standard|extended)\s+(\S+)\s*$/);
             if (aclMatch) {
                 // Add reminder for previous IOS ACL if needed
                 if (currentACL && lastACLLine >= 0 && !hasExplicitDenyAll) {

@@ -1,4 +1,32 @@
 # Changelog
+
+## [1.0.7] - 2026-10-23
+
+- Added NX-OS and ASA LINA syntax rules.
+- Added `.nxos` and `.asa` file associations.
+- Corrected rule order for declarations and free text.
+- Added command output tokens and address checks.
+- Added synthetic platform examples and TextMate regression tests.
+
+## [1.0.6] - 2026-10-23
+
+- Registered the 31 existing command snippets.
+- Preserved complete names in duplicate sequence messages.
+- Compared complete rule text to prevent false duplicate warnings.
+- Kept inline access-list entries separate from block declarations.
+- Applied the MIT license to this release.
+- Preserved the original Jamie Wood copyright notice.
+- Earlier releases retain their published license terms.
+
+## [1.0.5] - 2026-10-22
+
+### Changed
+
+- Updated the extension name and description to use Lawson Cyber LLC.
+- Replaced the extension icon with the Lawson Cyber LLC shield logo.
+- Applied the company banner color and website link.
+- Corrected the Marketplace and source links in the README.
+
 ## [1.0.4] - 08-09-2025
 
 ### Added

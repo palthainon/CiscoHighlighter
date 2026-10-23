@@ -1,69 +1,62 @@
-# vscode-cisco-syntax
+# Cisco IOS Highlighter — Lawson Cyber LLC
 
-Cisco IOS Highlighting for [Visual Studio Code](https://code.visualstudio.com/)
+![Lawson Cyber LLC logo](images/logo.png)
 
-## What This Extension Does
+Review Cisco configuration text in Visual Studio Code. Lawson Cyber LLC maintains this extension.
 
-This extension provides comprehensive syntax highlighting for Cisco IOS, IOS-XE, NX-OS, and ASA configuration files. It enhances your network automation and configuration management workflow by:
+## Features
 
-- **Color-coded syntax highlighting** for Cisco commands, keywords, and parameters
-- **Improved readability** of configuration files with proper formatting
-- **Support for multiple file types** including `.ios` and `.cisco` extensions
-- **Enhanced development experience** when working with network device configurations
-- **Better error detection** through visual highlighting of malformed commands
-- **Duplicate sequence detection** with hover tooltips for route-maps and access-lists
+- Highlight command keywords, addresses, interface names, and configuration sections.
+- Open `.ios`, `.cisco`, `.nxos`, and `.asa` files with the Cisco language mode.
+- Use 31 command snippets. Type a snippet prefix, such as `add-vlan`, then select the snippet.
+- Find repeated sequence numbers in route maps, prefix lists, and access lists.
+- Read duplicate line references in hover text and the Problems panel.
+- Find identical access-list rules after space normalization.
 
-Perfect for network engineers, DevOps professionals, and anyone working with Cisco network device configurations in VS Code.
+The grammar includes command forms from IOS, IOS-XE, NX-OS, and ASA. Highlighting and diagnostics provide review aids. They do not validate a configuration or establish device behavior. Check each diagnostic before you change a device configuration.
 
 ## Preview
 
-![Cisco IOS Syntax Highlighting](images/highlight-preview.png)
+![Cisco configuration in Visual Studio Code](images/highlight-preview.png)
 
-## Quick Start
+## Use
 
-* Install the [extension](https://marketplace.visualstudio.com/items?itemName=dericklawson.cisco-ios-highlighter) with VSCode.
+1. Install [Cisco IOS Highlighter](https://marketplace.visualstudio.com/items?itemName=DerickL.CiscoHighlighter).
+2. Open a file with the `.ios`, `.cisco`, `.nxos`, or `.asa` extension.
+3. If the file has another extension, select **Cisco** from the language mode control.
+4. Open the Problems panel to review diagnostics. Hover over a duplicate sequence for line references.
 
-* Save a file with the `.ios` or `.cisco` extension and open with VSCode
+Version 1.0.6 registers the existing snippets. It preserves names with hyphens in duplicate messages. It compares the complete access-list rule text to prevent false redundancy warnings.
 
-## New Features
+## Platform highlighting in 1.0.7
 
-### Duplicate Sequence Detection
+- NX-OS: feature declarations, VRF names, vPC commands, and interface identifiers.
+- ASA LINA: object declarations, object references, NAT commands, interface names, and access-group commands.
+- Command output: prompts, configuration headers, interface identifiers, addresses, MAC addresses, and link state words.
+- Shared syntax: declaration names, IPv6 prefixes, comments, descriptions, remarks, and banner content.
 
-The extension now provides comprehensive duplicate sequence detection with both visual indicators and hover tooltips:
+LINA is the [ASA firewall engine](https://www.cisco.com/c/en/us/support/docs/security/firepower-ngfw/200950-Clarifying-the-Firepower-Threat-Defense.html). This extension colors text from saved configuration and command output. It does not connect to a firewall. It does not validate every command or output table. Exact colors depend on the editor theme.
 
-**Visual Indicators:**
-- **Red squiggly underlines** automatically appear on duplicate sequence lines
-- **Warning indicators** in the Problems panel showing all duplicates in the file
+The shared language cannot always distinguish banner formats. IOS banners with alphabetic delimiters use single-line highlighting. ASA banner text that starts with punctuation can be read as a delimiter. Check unusual banners in the editor.
 
-**Hover Tooltips:**
-- **Route-maps**: Hover over any route-map line to see if the same sequence number is used elsewhere
-- **Access-lists**: Hover over access-list entries to detect duplicate sequence numbers within the same ACL (works with both indented and non-indented entries)
+The syntax tests use synthetic IOS, NX-OS, and ASA examples. They run the TextMate grammar with the same regular expression engine that Visual Studio Code uses.
 
-Example duplicate scenarios detected:
-```cisco
-route-map TEST-MAP permit 10
- match ip address ACL-1
-route-map TEST-MAP deny 20
- match all
-route-map TEST-MAP deny 20    ← Duplicate sequence 20 detected
- match community 100:200
+## Local processing
 
-ip access-list standard 2
- 10 permit 172.22.1.1
- 20 permit 10.1.1.1
- 20 permit 12.1.1.1          ← Duplicate sequence 20 detected
-```
+The extension reads the open document in the editor. It makes no network requests. It uses no telemetry or external analysis service. The company link opens only when you select it. Other editor extensions and file synchronization have separate data handling rules.
 
-**How it works:**
-1. **Automatic Detection**: Duplicates are detected automatically when you open or edit `.ios` or `.cisco` files
-2. **Visual Feedback**: Duplicate lines get red squiggly underlines immediately
-3. **Problems Panel**: All duplicates are listed in VS Code's Problems panel
-4. **Detailed Tooltips**: Hover over any duplicate line for specific information about where other duplicates are located
+## Support
 
-Both route-map and access-list duplicates are supported, with smart context detection that handles various Cisco IOS syntax patterns.
+Report errors through [GitHub issues](https://github.com/palthainon/CiscoHighlighter/issues). Use synthetic examples. Do not include passwords, keys, or customer configuration files.
 
-## Links
+[Lawson Cyber LLC](https://lawsoncyber.com) · [Source](https://github.com/palthainon/CiscoHighlighter)
 
-[GitHub](https://github.com/woodjme/vscode-cisco-syntax)
+## Development
 
-[Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=dericklawson.cisco-ios-highlighter)
+Run `npm ci`, then `npm test`. Run `npm run test:host` for the isolated Visual Studio Code 1.102.0 checks. The editor test downloads the official editor build on its first run.
+
+## License and credits
+
+This extension is a fork of [vscode-cisco-syntax](https://github.com/woodjme/vscode-cisco-syntax).
+
+This release uses the [MIT license](LICENSE). It retains the original Jamie Wood copyright notice. Earlier releases retain their published license terms.

@@ -1,64 +1,101 @@
 {
-	"name": "CiscoHighlighter",
-	"displayName": "Cisco IOS Highlighter",
-	"description": "Cisco IOS Highlighter by Derick Lawson",
-	"version": "1.0.4",
-	"publisher": "DerickL",
-	"icon": "images/logo.png",
-	"galleryBanner": {
-		"color": "#000000",
-		"theme": "dark"
-	},
-	"galleryImages": [
-		"images/highlight-preview.png"
-	],
-	"preview": true,
-	"license": "Apache-2.0",
-	"engines": {
-		"vscode": "^1.102.0"
-	},
-	"scripts": {
-		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -p ./",
-		"watch": "tsc -watch -p ./"
-	},
-	"devDependencies": {
-		"@types/node": "^18.19.122",
-		"@types/vscode": "^1.102.0",
-		"typescript": "^5.0.0"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/palthainon/CiscoHighlighter"
-	},
-	"categories": [
-		"Programming Languages"
-	],
-	"main": "./out/extension.js",
-	"activationEvents": [
-		"onLanguage:cisco"
-	],
-	"contributes": {
-		"languages": [
-			{
-				"id": "cisco",
-				"aliases": [
-					"Cisco",
-					"cisco"
-				],
-				"extensions": [
-					".ios",
-					".cisco"
-				],
-				"configuration": "./language-configuration.json"
-			}
-		],
-		"grammars": [
-			{
-				"language": "cisco",
-				"scopeName": "text.cisco",
-				"path": "./syntaxes/cisco.tmLanguage"
-			}
-		]
-	}
+  "name": "CiscoHighlighter",
+  "displayName": "Cisco IOS Highlighter — Lawson Cyber LLC",
+  "description": "Cisco IOS, NX-OS, and ASA configuration highlighting with local sequence diagnostics from Lawson Cyber LLC.",
+  "version": "1.0.7",
+  "publisher": "DerickL",
+  "icon": "images/logo.png",
+  "galleryBanner": {
+    "color": "#3a2414",
+    "theme": "dark"
+  },
+  "preview": true,
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.102.0"
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "npm run compile && node --test test/*.test.js",
+    "test:host": "npm run compile && node test/run-host.js"
+  },
+  "devDependencies": {
+    "@types/node": "^18.19.122",
+    "@types/vscode": "^1.102.0",
+    "@vscode/test-electron": "3.1.0",
+    "typescript": "^5.0.0",
+    "vscode-oniguruma": "2.0.1",
+    "vscode-textmate": "9.3.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/palthainon/CiscoHighlighter"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "onLanguage:cisco"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "cisco",
+        "aliases": [
+          "Cisco",
+          "cisco",
+          "Cisco IOS",
+          "Cisco NX-OS",
+          "Cisco ASA"
+        ],
+        "extensions": [
+          ".ios",
+          ".cisco",
+          ".nxos",
+          ".asa"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "cisco",
+        "scopeName": "text.cisco",
+        "path": "./syntaxes/cisco.tmLanguage"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "cisco",
+        "path": "./snipplets/cisco.json"
+      }
+    ]
+  },
+  "author": {
+    "name": "Lawson Cyber LLC",
+    "url": "https://lawsoncyber.com"
+  },
+  "homepage": "https://lawsoncyber.com",
+  "vsce": {
+    "baseImagesUrl": "https://raw.githubusercontent.com/palthainon/CiscoHighlighter/e1666d38b8f699683706bc52f6bf36d80d8f4601/",
+    "baseContentUrl": "https://github.com/palthainon/CiscoHighlighter/blob/f89ce1a2a5de2e33a292326a6d78647dd17ffe27/",
+    "dependencies": false
+  },
+  "keywords": [
+    "cisco",
+    "ios",
+    "ios-xe",
+    "nx-os",
+    "asa",
+    "lina",
+    "network",
+    "syntax",
+    "highlighting"
+  ],
+  "bugs": {
+    "url": "https://github.com/palthainon/CiscoHighlighter/issues"
+  }
 }
