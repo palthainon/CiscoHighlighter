@@ -71,5 +71,10 @@
     "name": "Lawson Cyber LLC",
     "url": "https://lawsoncyber.com"
   },
-  "homepage": "https://lawsoncyber.com"
+  "homepage": "https://lawsoncyber.com",
+  "vsce": {
+    "baseImagesUrl": "https://raw.githubusercontent.com/palthainon/CiscoHighlighter/e1666d38b8f699683706bc52f6bf36d80d8f4601/",
+    "baseContentUrl": "https://github.com/palthainon/CiscoHighlighter/blob/e1666d38b8f699683706bc52f6bf36d80d8f4601/",
+    "dependencies": false
+  }
 }
