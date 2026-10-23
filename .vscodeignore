@@ -9,3 +9,6 @@ out/**/*.map
 tsconfig.json
 test-highlighting.ios
 vsc-extension-quickstart.md
+
+test/**
+.vscode-test/**

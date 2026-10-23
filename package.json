@@ -9,9 +9,6 @@
     "color": "#3a2414",
     "theme": "dark"
   },
-  "galleryImages": [
-    "images/highlight-preview.png"
-  ],
   "preview": true,
   "license": "MIT",
   "engines": {
@@ -20,11 +17,14 @@
   "scripts": {
     "vscode:prepublish": "npm run compile",
     "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./"
+    "watch": "tsc -watch -p ./",
+    "test": "npm run compile && node --test test/*.test.js",
+    "test:host": "npm run compile && node test/run-host.js"
   },
   "devDependencies": {
     "@types/node": "^18.19.122",
     "@types/vscode": "^1.102.0",
+    "@vscode/test-electron": "3.1.0",
     "typescript": "^5.0.0"
   },
   "repository": {
@@ -58,6 +58,12 @@
         "language": "cisco",
         "scopeName": "text.cisco",
         "path": "./syntaxes/cisco.tmLanguage"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "cisco",
+        "path": "./snipplets/cisco.json"
       }
     ]
   },

@@ -2,6 +2,10 @@
 
 ## [1.0.6] - 2026-10-23
 
+- Registered the 31 existing command snippets.
+- Preserved complete names in duplicate sequence messages.
+- Compared complete rule text to prevent false duplicate warnings.
+- Kept inline access-list entries separate from block declarations.
 - Applied the MIT license to this release.
 - Preserved the original Jamie Wood copyright notice.
 - Earlier releases retain their published license terms.
