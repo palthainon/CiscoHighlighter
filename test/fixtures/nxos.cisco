@@ -1,0 +1,21 @@
+! Synthetic NX-OS configuration and show output.
+feature vpc
+feature interface-vlan
+vrf context KEEPALIVE
+vpc domain 20
+  peer-keepalive destination 192.0.2.22 source 192.0.2.21 vrf KEEPALIVE
+interface Ethernet1/1
+  description permit host 192.0.2.99 is documentation
+  switchport mode trunk
+  channel-group 20 mode active
+interface port-channel20
+  vpc peer-link
+interface mgmt0
+  vrf member management
+  ip address 192.0.2.21/24
+interface Vlan120
+  ipv6 address 2001:db8:120::1/64
+LEAF-LAB# show interface brief
+Eth1/1 120 eth trunk up none 10G(D) --
+Po20 120 eth trunk up none a-10G(D) none
+mgmt0 -- up 192.0.2.21 1000 1500

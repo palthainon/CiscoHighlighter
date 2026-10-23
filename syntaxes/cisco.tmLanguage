@@ -14,6 +14,36 @@
 	<string>Cisco</string>
 	<key>patterns</key>
 	<array>
+		<!-- Ordered rules for IOS, NX-OS, and ASA/LINA. -->
+		<dict><key>match</key><string>^\s*(?:!|:(?=\s|$)).*$</string><key>name</key><string>comment.line.cisco</string></dict>
+		<dict><key>match</key><string>(^\s*(?:description|remark|system message)\b|^\s*access-list\s+\S+\s+(?:line\s+\d+\s+)?remark\b).*$</string><key>name</key><string>comment.documentation.cisco</string></dict>
+		<dict><key>begin</key><string>^\s*(banner)\s+(?:motd|login|exec|incoming|slip-ppp)\s+(\^C|[^\w\s])</string><key>end</key><string>\2</string><key>name</key><string>string.quoted.banner.cisco</string><key>beginCaptures</key><dict><key>1</key><dict><key>name</key><string>keyword.control.cisco</string></dict><key>2</key><dict><key>name</key><string>punctuation.definition.string.begin.cisco</string></dict></dict><key>endCaptures</key><dict><key>0</key><dict><key>name</key><string>punctuation.definition.string.end.cisco</string></dict></dict></dict>
+		<dict><key>match</key><string>^\s*banner\s+(?:motd|login|exec|asdm)\s+.*$</string><key>name</key><string>string.unquoted.banner.cisco</string></dict>
+		<dict><key>match</key><string>^([A-Za-z0-9_.:/-]+(?:\([^\r\n()]*\))?[#&gt;])\s*</string><key>name</key><string>meta.prompt.cisco</string><key>captures</key><dict><key>1</key><dict><key>name</key><string>punctuation.definition.prompt.cisco</string></dict></dict></dict>
+		<dict><key>match</key><string>\b(show|terminal pager)\b</string><key>name</key><string>keyword.control.command.cisco</string></dict>
+		<dict><key>match</key><string>^\s*(?:Building configuration.*|Current configuration\s*:.*|ASA Version\s+.*|Cisco Adaptive Security Appliance Software Version\s+.*|Cisco Nexus Operating System.*)$</string><key>name</key><string>comment.line.metadata.cisco</string></dict>
+		<dict><key>match</key><string>^\s*(interface)\s+(\S+)</string><key>name</key><string>meta.declaration.interface.cisco</string><key>captures</key><dict><key>1</key><dict><key>name</key><string>keyword.control.cisco</string></dict><key>2</key><dict><key>name</key><string>entity.name.section.interface.cisco</string></dict></dict></dict>
+		<dict><key>match</key><string>^\s*(route-map)\s+(\S+)\s+(permit|deny)(?:\s+(\d+))?</string><key>name</key><string>meta.declaration.route-map.cisco</string><key>captures</key><dict><key>1</key><dict><key>name</key><string>keyword.control.cisco</string></dict><key>2</key><dict><key>name</key><string>entity.name.function.cisco</string></dict><key>3</key><dict><key>name</key><string>keyword.control.acl.cisco</string></dict><key>4</key><dict><key>name</key><string>constant.numeric.sequence.cisco</string></dict></dict></dict>
+		<dict><key>match</key><string>^\s*((?:ip|ipv6) access-list)(?:\s+(extended|standard))?\s+(\S+)</string><key>name</key><string>meta.declaration.acl.cisco</string><key>captures</key><dict><key>1</key><dict><key>name</key><string>keyword.control.cisco</string></dict><key>2</key><dict><key>name</key><string>keyword.other.acl.cisco</string></dict><key>3</key><dict><key>name</key><string>entity.name.function.cisco</string></dict></dict></dict>
+		<dict><key>match</key><string>^\s*((?:ip|ipv6) prefix-list)\s+(\S+)</string><key>name</key><string>meta.declaration.prefix-list.cisco</string><key>captures</key><dict><key>1</key><dict><key>name</key><string>keyword.control.cisco</string></dict><key>2</key><dict><key>name</key><string>entity.name.function.cisco</string></dict></dict></dict>
+		<dict><key>match</key><string>^\s*((?:class|policy)-map)(?:\s+type\s+(?:inspect(?:\s+(?:dns|ftp|http|sip|smtp|esmtp|h323|icmp|ip-options|netbios|rtsp|snmp|sqlnet|tftp))?|qos|network-qos|queuing|control-plane))?(?:\s+(match-any|match-all))?\s+(\S+)</string><key>name</key><string>meta.declaration.policy.cisco</string><key>captures</key><dict><key>1</key><dict><key>name</key><string>keyword.control.cisco</string></dict><key>2</key><dict><key>name</key><string>keyword.other.cisco</string></dict><key>3</key><dict><key>name</key><string>entity.name.function.cisco</string></dict></dict></dict>
+		<dict><key>match</key><string>^\s*(object-group)\s+(network|service|protocol|icmp-type|security)\s+(\S+)</string><key>name</key><string>meta.declaration.object-group.cisco</string><key>captures</key><dict><key>1</key><dict><key>name</key><string>keyword.control.cisco</string></dict><key>2</key><dict><key>name</key><string>storage.type.cisco</string></dict><key>3</key><dict><key>name</key><string>entity.name.function.cisco</string></dict></dict></dict>
+		<dict><key>match</key><string>^\s*(object)\s+(network|service)\s+(\S+)</string><key>name</key><string>meta.declaration.object.cisco</string><key>captures</key><dict><key>1</key><dict><key>name</key><string>keyword.control.cisco</string></dict><key>2</key><dict><key>name</key><string>storage.type.cisco</string></dict><key>3</key><dict><key>name</key><string>entity.name.function.cisco</string></dict></dict></dict>
+		<dict><key>match</key><string>^\s*(vrf (?:context|definition))\s+(\S+)</string><key>name</key><string>meta.declaration.vrf.cisco</string><key>captures</key><dict><key>1</key><dict><key>name</key><string>keyword.control.cisco</string></dict><key>2</key><dict><key>name</key><string>entity.name.function.cisco</string></dict></dict></dict>
+		<dict><key>match</key><string>^\s*(vpc domain)\s+(\d+)</string><key>name</key><string>meta.declaration.vpc.cisco</string><key>captures</key><dict><key>1</key><dict><key>name</key><string>keyword.control.cisco</string></dict><key>2</key><dict><key>name</key><string>constant.numeric.cisco</string></dict></dict></dict>
+		<dict><key>match</key><string>^\s*(feature|no feature)\s+(\S+)</string><key>name</key><string>meta.feature.nxos.cisco</string><key>captures</key><dict><key>1</key><dict><key>name</key><string>keyword.control.cisco</string></dict><key>2</key><dict><key>name</key><string>support.function.feature.cisco</string></dict></dict></dict>
+		<dict><key>match</key><string>^\s*(nameif)\s+(\S+)</string><key>name</key><string>meta.nameif.asa.cisco</string><key>captures</key><dict><key>1</key><dict><key>name</key><string>keyword.other.interface.cisco</string></dict><key>2</key><dict><key>name</key><string>entity.name.function.cisco</string></dict></dict></dict>
+		<dict><key>match</key><string>^\s*(?:no\s+)?(?:vpc(?:\s+peer-link)?|peer-keepalive|peer-gateway|auto-recovery|vrf member|vn-segment|nv overlay|member vni|source-interface|fabric forwarding|spanning-tree|channel-group|switchport|hsrp|standby)\b</string><key>name</key><string>keyword.other.switching.cisco</string></dict>
+		<dict><key>match</key><string>^\s*(?:no\s+)?(?:nameif|security-level|same-security-traffic|management-only|access-group|nat|global|route|network-object|service-object|port-object|group-object|subnet|range|failover|tunnel-group|group-policy|aaa-server|webvpn|inspect|service-policy)\b</string><key>name</key><string>keyword.other.firewall.cisco</string></dict>
+		<dict><key>match</key><string>\b(object-group|object)\s+(\S+)</string><key>name</key><string>meta.reference.object.cisco</string><key>captures</key><dict><key>1</key><dict><key>name</key><string>keyword.other.firewall.cisco</string></dict><key>2</key><dict><key>name</key><string>variable.other.object.cisco</string></dict></dict></dict>
+		<dict><key>match</key><string>(?&lt;![\w-])(?:any4|any6|any|host|eq|neq|lt|gt|range|tcp|udp|icmp6?|ip|ipv6|log|inactive|hitcnt)(?![\w-])</string><key>name</key><string>keyword.other.acl.cisco</string></dict>
+		<dict><key>match</key><string>(?i)(?&lt;![\w-])(?:Ethernet|Eth|GigabitEthernet|Gi|TenGigabitEthernet|Te|FastEthernet|Fa|TwentyFiveGigE|HundredGigE|FortyGigabitEthernet|Port-channel|Po|Loopback|Lo|Vlan|Vl|mgmt|Management|Tunnel|Tu|Serial|Se|BVI|Bundle-Ether|MgmtEth)\d+(?:[/.:]\d+)*(?![\w-])</string><key>name</key><string>constant.language.interface.cisco</string></dict>
+		<dict><key>match</key><string>(?&lt;![\w:])(?:[0-9A-Fa-f]{4}\.){2}[0-9A-Fa-f]{4}(?![\w.])|(?&lt;![\w:])(?:[0-9A-Fa-f]{2}:){5}[0-9A-Fa-f]{2}(?![\w:])</string><key>name</key><string>constant.numeric.mac.cisco</string></dict>
+		<dict><key>match</key><string>(?&lt;![\w:])\d{1,2}:\d{2}:\d{2}(?![\w:])</string><key>name</key><string>constant.numeric.time.cisco</string></dict>
+		<dict><key>match</key><string>(?&lt;![\w.])(?:25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)(?:\.(?:25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)){3}(?:/(?:3[0-2]|[12]?\d)(?!\d))?(?![\w.])</string><key>name</key><string>constant.numeric.ipv4.cisco</string></dict>
+		<dict><key>match</key><string>(?&lt;![\w:])(?:::(?:[fF]{4}:)?(?:25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)(?:\.(?:25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)){3}|[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}|::(?:[0-9A-Fa-f]{1,4}(?::[0-9A-Fa-f]{1,4}){0,6})?|[0-9A-Fa-f]{1,4}::(?:[0-9A-Fa-f]{1,4}(?::[0-9A-Fa-f]{1,4}){0,5})?|[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}::(?:[0-9A-Fa-f]{1,4}(?::[0-9A-Fa-f]{1,4}){0,4})?|[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}::(?:[0-9A-Fa-f]{1,4}(?::[0-9A-Fa-f]{1,4}){0,3})?|[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}::(?:[0-9A-Fa-f]{1,4}(?::[0-9A-Fa-f]{1,4}){0,2})?|[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}::(?:[0-9A-Fa-f]{1,4}(?::[0-9A-Fa-f]{1,4}){0,1})?|[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}::(?:[0-9A-Fa-f]{1,4}(?::[0-9A-Fa-f]{1,4}){0,0})?|[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}:[0-9A-Fa-f]{1,4}::)(?:/(?:12[0-8]|1[01]\d|[1-9]?\d)(?!\d))?(?![\w:])</string><key>name</key><string>constant.numeric.ipv6.cisco</string></dict>
+		<dict><key>match</key><string>(?&lt;![\w-])(?:administratively down|connected|notconnect|up|down|disabled|err-disabled)(?![\w-])</string><key>name</key><string>constant.language.status.cisco</string></dict>
+		<dict><key>match</key><string>\b(?:TCP|UDP|ICMP)\b</string><key>name</key><string>storage.type.protocol.cisco</string></dict>
 		<dict>
 			<key>match</key>
 			<string>^\s*no </string>
@@ -22,7 +52,7 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>access-list</string>
+			<string>(?&lt;![\w-])access-list(?![\w-])</string>
 			<key>name</key>
 			<string>support.function.cisco</string>
 		</dict>
@@ -66,19 +96,19 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>object-group</string>
+			<string>(?&lt;![\w-])object-group(?![\w-])</string>
 			<key>name</key>
 			<string>markup.list.cisco</string>
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>object</string>
+			<string>(?&lt;![\w-])object(?![\w-])</string>
 			<key>name</key>
 			<string>markup.list.cisco</string>
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>host</string>
+			<string>(?&lt;![\w-])host(?![\w-])</string>
 			<key>name</key>
 			<string>markup.list.cisco</string>
 		</dict>
@@ -90,33 +120,21 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>static</string>
+			<string>(?&lt;![\w-])static(?![\w-])</string>
 			<key>name</key>
 			<string>constant.numeric.cisco</string>
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>tunnel-group</string>
+			<string>(?&lt;![\w-])tunnel-group(?![\w-])</string>
 			<key>name</key>
 			<string>support.class.cisco</string>
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>crypto</string>
+			<string>(?&lt;![\w-])crypto(?![\w-])</string>
 			<key>name</key>
 			<string>support.class.cisco</string>
-		</dict>
-		<dict>
-			<key>match</key>
-			<string>\d+\.\d+\.\d+\.\d+(/\d{1,2})?</string>
-			<key>name</key>
-			<string>constant.numeric.cisco</string>
-		</dict>
-		<dict>
-			<key>match</key>
-			<string>[0-9a-fA-F]{0,4}:([0-9a-fA-F]{0,4}:)+[0-9a-fA-F]{0,4}(/\d{1,3})?</string>
-			<key>name</key>
-			<string>constant.numeric.cisco</string>
 		</dict>
 		<!--Added new matches from https://github.com/jasongill/cisco-ios-tmbundle -->
 		<dict>
@@ -127,15 +145,9 @@
 		</dict>
 		<dict>
 			<key>match</key>
-			<string>((^$|no )(interface|line|ip (access-list (extended|standard)|dhcp (pool|excluded-address)|route|classless|subnet-zero|nat|http|local pool|flow-export|flow-top-talkers|inspect|domain|ips|host)|router|voice-(card|port)|dial-peer|voice (translation-(rule|profile)|register (global|pool|dn)|service)|application$|crypto (pki|keyring|isakmp (profile|policy|client configuration)|ipsec (profile|transform-set)|(dynamic-)?map)|telephony-service|ephone(-dn)?|banner|(class|policy|route)-map|map-class)|\b(ssid|pvc|certificate)|service|clock|boot|logging|control-plane|aaa|(tftp|snmp|radius)-server|ntp|bridge|(access|dialer)-list|archive)\b</string>
+			<string>(?&lt;![\w-])((^$|no )(interface|line|ip (access-list (extended|standard)|dhcp (pool|excluded-address)|route|classless|subnet-zero|nat|http|local pool|flow-export|flow-top-talkers|inspect|domain|ips|host)|router|voice-(card|port)|dial-peer|voice (translation-(rule|profile)|register (global|pool|dn)|service)|application$|crypto (pki|keyring|isakmp (profile|policy|client configuration)|ipsec (profile|transform-set)|(dynamic-)?map)|telephony-service|ephone(-dn)?|banner|(class|policy|route)-map|map-class)|\b(ssid|pvc|certificate)|service|clock|boot|logging|control-plane|aaa|(tftp|snmp|radius)-server|ntp|bridge|(access|dialer)-list|archive)\b</string>
 			<key>name</key>
 			<string>support.control.cisco</string>
-		</dict>
-		<dict>
-			<key>match</key>
-			<string>\b([0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}|\h{1,4}\.\h{1,4}\.\h{1,4}(\.\h{1,2})?)\b</string>
-			<key>name</key>
-			<string>constant.numeric.cisco</string>
 		</dict>
 		<dict>
 			<key>match</key>
@@ -409,19 +421,7 @@
 			<string>support.function.radius.ios</string>
 		</dict>
 		<!-- Enhanced IPv4 addresses -->
-		<dict>
-			<key>match</key>
-			<string>\b(?:(?:25[0-5]|2[0-4]\d|1?\d?\d)(?:\.|$)){4}\b</string>
-			<key>name</key>
-			<string>constant.numeric.ipv4.ios</string>
-		</dict>
 		<!-- Enhanced IPv6 addresses -->
-		<dict>
-			<key>match</key>
-			<string>\b[0-9A-Fa-f:]{2,}:[0-9A-Fa-f:]+\b</string>
-			<key>name</key>
-			<string>constant.numeric.ipv6.ios</string>
-		</dict>
 		<!-- Track objects -->
 		<dict>
 			<key>match</key>

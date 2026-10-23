@@ -1,0 +1,17 @@
+! Synthetic IOS configuration.
+hostname IOS-LAB
+interface GigabitEthernet0/0
+ description uplink permit any host 192.0.2.1
+ ip address 192.0.2.1 255.255.255.0
+ ipv6 address 2001:db8::1/64
+route-map LAB-EXPORT permit 10
+ match ip address prefix-list LAB-PREFIX
+ip prefix-list LAB-PREFIX seq 10 permit 198.51.100.0/24
+ip access-list extended LAB-IN
+ remark deny host 192.0.2.9 is documentation
+ permit tcp any host 192.0.2.10 eq 443
+banner motd ^C
+permit host 192.0.2.11
+^C
+interface Loopback0
+ ip address 198.51.100.1 255.255.255.255

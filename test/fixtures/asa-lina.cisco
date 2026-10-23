@@ -1,0 +1,18 @@
+ASA-LAB/pri/act# show running-config
+: Saved
+ASA Version 9.20(2)
+hostname ASA-LAB
+interface GigabitEthernet0/1
+ nameif inside
+ security-level 100
+ ip address 10.20.0.1 255.255.255.0
+object network LAB-NET
+ subnet 10.20.0.0 255.255.255.0
+ nat (inside,outside) dynamic interface
+object-group service LAB-WEB tcp
+ port-object eq 443
+access-list LAB-IN remark permit host 192.0.2.99 is documentation
+access-list LAB-IN extended permit tcp object LAB-NET any4 eq 443
+access-group LAB-IN in interface inside
+ASA-LAB/pri/act# show conn
+TCP outside 192.0.2.40:443 inside 10.20.0.50:51000, idle 0:01:32, bytes 1024, flags UIO
