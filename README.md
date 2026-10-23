@@ -75,3 +75,7 @@ Both route-map and access-list duplicates are supported, with smart context dete
 ## Credits
 
 This extension is a fork of [vscode-cisco-syntax](https://github.com/woodjme/vscode-cisco-syntax).
+
+## License
+
+This release uses the MIT license. The license retains the original Jamie Wood copyright notice. Earlier releases retain their published license terms.

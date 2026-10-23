@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.6] - 2026-10-23
+
+- Applied the MIT license to this release.
+- Preserved the original Jamie Wood copyright notice.
+- Earlier releases retain their published license terms.
+
 ## [1.0.5] - 2026-10-22
 
 ### Changed
